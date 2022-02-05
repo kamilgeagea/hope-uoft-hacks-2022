@@ -24,6 +24,11 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.dark,
           barBackgroundColor: kPRIMARY_COLOR,
           scaffoldBackgroundColor: kPRIMARY_COLOR),
+      localizationsDelegates: [
+        DefaultMaterialLocalizations.delegate,
+        DefaultCupertinoLocalizations.delegate,
+        DefaultWidgetsLocalizations.delegate,
+      ],
     );
   }
 }

@@ -3,8 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:client/constants.dart';
 import 'package:flutter/material.dart';
 
+import '../pages/posts/post.dart';
+
 class PostCard extends StatefulWidget {
-  final Post post;
+  final PostItem post;
   const PostCard({Key? key, required this.post}) : super(key: key);
 
   @override
@@ -18,9 +20,11 @@ class _PostCardState extends State<PostCard> {
       onTap: () {
         Navigator.of(context).push(PageRouteBuilder(
             opaque: false,
-            transitionDuration: const Duration(microseconds: 300),
+            transitionDuration: const Duration(milliseconds: 300),
             fullscreenDialog: true,
-            pageBuilder: (context, _, __) => Container(),
+            pageBuilder: (context, _, __) => Post(
+                  post: widget.post,
+                ),
             settings: RouteSettings(arguments: widget.post.id)));
       },
       child: Hero(
