@@ -16,11 +16,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return CupertinoApp(
+    return const CupertinoApp(
       home: Posts(),
       debugShowCheckedModeBanner: false,
       title: 'Launch',
-      theme: const CupertinoThemeData(
+      theme: CupertinoThemeData(
           brightness: Brightness.dark,
           barBackgroundColor: kPRIMARY_COLOR,
           scaffoldBackgroundColor: kPRIMARY_COLOR),
