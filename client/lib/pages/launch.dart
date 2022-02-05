@@ -1,4 +1,5 @@
 import 'package:client/pages/auth/sign_in.dart';
+import 'package:client/pages/auth/sign_up.dart';
 import 'package:flutter/material.dart';
 
 class Launch extends StatefulWidget {
@@ -66,7 +67,10 @@ class _LaunchState extends State<Launch> {
                       height: 20,
                     ),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => SignUp()));
+                      },
                       child: Text(
                         "Sign Up",
                         style: TextStyle(fontSize: 18),
