@@ -1,4 +1,4 @@
-package com.example.client
+package com.uofthacks.hope
 
 import io.flutter.embedding.android.FlutterActivity
 

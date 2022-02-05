@@ -1,3 +1,4 @@
+import 'package:client/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
 class SignUp extends StatefulWidget {
@@ -42,8 +43,15 @@ class _SignUpState extends State<SignUp> {
                             //_authService.signIn(email, password);
                           }
                         },
-                        child: Text("Done",
-                            style: TextStyle(color: Colors.pink, fontSize: 18)),
+                        child: TextButton(
+                          onPressed: () {
+                            AuthService().signUp(username, email, password);
+                          },
+                          child: Text(
+                            "Done",
+                            style: TextStyle(color: Colors.pink, fontSize: 18),
+                          ),
+                        ),
                       ),
                     )
                   ],
