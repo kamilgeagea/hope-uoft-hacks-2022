@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+
+import 'constants.dart';
 
 import 'pages/launch.dart';
+import 'pages/posts/posts.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,11 +16,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Launch(),
+    return CupertinoApp(
+      home: Posts(),
       debugShowCheckedModeBanner: false,
       title: 'Launch',
-      theme: ThemeData.dark(),
+      theme: const CupertinoThemeData(
+          brightness: Brightness.dark,
+          barBackgroundColor: kPRIMARY_COLOR,
+          scaffoldBackgroundColor: kPRIMARY_COLOR),
     );
   }
 }
