@@ -4,6 +4,7 @@ import 'package:client/constants.dart';
 import 'package:flutter/material.dart';
 
 import '../pages/posts/post.dart';
+import './pressable.dart';
 
 class PostCard extends StatefulWidget {
   final PostItem post;
@@ -16,7 +17,7 @@ class PostCard extends StatefulWidget {
 class _PostCardState extends State<PostCard> {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return Pressable(
       onTap: () {
         Navigator.of(context).push(PageRouteBuilder(
             opaque: false,

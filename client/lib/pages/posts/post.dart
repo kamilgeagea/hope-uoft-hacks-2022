@@ -161,6 +161,9 @@ class _PostState extends State<Post> with TickerProviderStateMixin {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
+                                const SizedBox(
+                                  height: 5.0,
+                                ),
                                 Text(
                                   widget.post.category,
                                   style: const TextStyle(
