@@ -6,6 +6,7 @@ const PORT = process.env.PORT || 3000
 const routes = require('./routes/index')
 const app = express();
 
+connectDB()
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

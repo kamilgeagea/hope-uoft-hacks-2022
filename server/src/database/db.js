@@ -1,10 +1,17 @@
-const admin=require('firebase-admin');
-var serviceAccount = require('./hope-417c1-firebase-adminsdk-1bj0p-6606ac7c35.json');
+const mongoose = require('mongoose')
+const dbConfig = require('./dbConfig')
 
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://hope-417c1.firebaseio.com",
-    authDomain: "hope-417c1.firebaseapp.com",
-});
+const connectDB = async() => {
+    try{
+        const conn = await mongoose.connect(dbConfig.database, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        })
+        console.log(`MongoDB Connected: ${conn.connection.host}`)
+    } catch(err){
+        console.log(err)
+        process.exit(1)
+    }
+}
 
-module.exports = admin
+module.exports = connectDB
