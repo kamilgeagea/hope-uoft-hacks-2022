@@ -15,13 +15,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Launch(),
       debugShowCheckedModeBanner: false,
-      title: 'Sign Up',
+      title: 'Launch',
       theme: ThemeData.dark(),
     );
   }
-    
 }
-
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);

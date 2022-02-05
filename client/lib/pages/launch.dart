@@ -1,3 +1,4 @@
+import 'package:client/pages/auth/sign_in.dart';
 import 'package:flutter/material.dart';
 
 class Launch extends StatefulWidget {
@@ -8,14 +9,6 @@ class Launch extends StatefulWidget {
 }
 
 class _LaunchState extends State<Launch> {
-  int _currentIndex = 0;
-
-  void onTabPressed(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +43,10 @@ class _LaunchState extends State<Launch> {
                 child: Column(
                   children: [
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => SignIn()));
+                      },
                       child: Text(
                         "Sign In",
                         style: TextStyle(fontSize: 18),
