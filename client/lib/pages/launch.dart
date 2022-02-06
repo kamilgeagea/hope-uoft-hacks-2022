@@ -18,7 +18,7 @@ class _LaunchState extends State<Launch> {
   Widget build(BuildContext context) {
     return CupertinoScaffold(
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(15, 200, 15, 50),
+        padding: const EdgeInsets.fromLTRB(20, 200, 20, 50),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -63,7 +63,6 @@ class _LaunchState extends State<Launch> {
                       child: Container(
                           width: double.infinity,
                           height: 50,
-                          margin: const EdgeInsets.symmetric(horizontal: 15),
                           decoration: BoxDecoration(
                               color: kSECONDARY_COLOR,
                               borderRadius: BorderRadius.circular(10)),
@@ -87,7 +86,6 @@ class _LaunchState extends State<Launch> {
                       child: Container(
                           width: double.infinity,
                           height: 50,
-                          margin: const EdgeInsets.symmetric(horizontal: 15),
                           decoration: BoxDecoration(
                               color: kSECONDARY_COLOR,
                               borderRadius: BorderRadius.circular(10)),
@@ -96,18 +94,7 @@ class _LaunchState extends State<Launch> {
                               "Sign Up",
                               style: TextStyle(fontSize: 18),
                             ),
-                          ))
-                      // style: ButtonStyle(
-                      //     backgroundColor:
-                      //         MaterialStateProperty.all<Color?>(Colors.grey[800]),
-                      //     padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                      //       const EdgeInsets.symmetric(
-                      //           vertical: 15, horizontal: 60),
-                      //     ),
-                      //     shape: MaterialStateProperty.all<OutlinedBorder>(
-                      //         RoundedRectangleBorder(
-                      //             borderRadius: BorderRadius.circular(16)))),
-                      ),
+                          ))),
                 ],
               ),
             ),

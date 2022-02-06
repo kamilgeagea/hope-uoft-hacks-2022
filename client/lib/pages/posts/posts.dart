@@ -1,9 +1,11 @@
+import 'package:client/pages/launch.dart';
 import 'package:client/widgets/pressable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:client/constants.dart';
 import '../../widgets/pill.dart';
 import '../../widgets/post_card.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Posts extends StatefulWidget {
   const Posts({Key? key}) : super(key: key);
@@ -13,6 +15,7 @@ class Posts extends StatefulWidget {
 }
 
 class _PostsState extends State<Posts> {
+  final _auth = FirebaseAuth.instance;
   String category = "";
 
   // Import categories once backend implemented
@@ -62,6 +65,44 @@ class _PostsState extends State<Posts> {
             "Dix personnes ont été arrêtées et les policiers ont distribué 144 constats d’infraction lors d’une manifestation contre les mesures sanitaires samedi à Montréal. L’agent Raphaël Bergeron, porte-parole du Service de police de Montréal (SPVM), a fait état du bilan en début de soirée. « On parle d’accusations d’entraves, une personne a aussi été arrêtée en vertu d’un mandat d’arrestation, on parle de possession d’arme et de voie de fait sur policier."),
   ];
 
+  _showDialog(BuildContext context) async {
+    bool isLoggingOut = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return CupertinoAlertDialog(
+            title: const Text("Logout"),
+            content: const Text("Are you sure that you want to logout?"),
+            actions: <Widget>[
+              CupertinoDialogAction(
+                child: const Text(
+                  "Logout",
+                  style: TextStyle(fontWeight: FontWeight.w500),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+              ),
+              CupertinoDialogAction(
+                child: const Text("Cancel"),
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+              ),
+            ],
+          );
+        });
+
+    if (isLoggingOut) {
+      await _auth.signOut();
+
+      Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+              pageBuilder: (context, _, __) => const Launch(),
+              transitionDuration: Duration.zero));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -69,9 +110,18 @@ class _PostsState extends State<Posts> {
             headerSliverBuilder:
                 (BuildContext context, bool innerBoxIsScrolled) {
               return <Widget>[
-                const CupertinoSliverNavigationBar(
-                  largeTitle: Text(
+                CupertinoSliverNavigationBar(
+                  largeTitle: const Text(
                     "News",
+                  ),
+                  trailing: Pressable(
+                    onTap: () {
+                      _showDialog(context);
+                    },
+                    child: const Icon(
+                      Icons.logout,
+                      color: kACCENT_COLOR,
+                    ),
                   ),
                 )
               ];
@@ -83,7 +133,7 @@ class _PostsState extends State<Posts> {
                 ),
                 SizedBox(
                     height: 40,
-                    child: category.length == 0
+                    child: category.isEmpty
                         ? ListView.builder(
                             shrinkWrap: true,
                             padding: const EdgeInsets.only(left: 15.0),
