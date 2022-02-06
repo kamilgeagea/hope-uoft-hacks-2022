@@ -56,6 +56,7 @@ const functions = {
         try{
             let output = ''
             axios.request(business).then(function (response) {
+                console.log(response)
                 output+=response
                 axios.request(science).then(function (response1) {
                     output+=response1
@@ -76,7 +77,7 @@ const functions = {
             }).catch(function (error) {
                 console.error(error);
             });
-            /*const func = async function quickstart(req) {
+            const func = async function quickstart(req) {
                 // The text to analyze
                 const text = req;
                 
@@ -92,7 +93,7 @@ const functions = {
                 console.log(`Text: ${text}`);
                 console.log(`Sentiment score: ${sentiment.score}`);
                 console.log(`Sentiment magnitude: ${sentiment.magnitude}`);
-            }*/
+            }
         }
         catch(error){
             res.send({
