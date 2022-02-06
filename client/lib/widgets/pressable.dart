@@ -3,8 +3,15 @@ import "package:flutter/cupertino.dart";
 class Pressable extends StatefulWidget {
   final Widget child;
   final Function onTap;
+  final bool isLoading;
+  final double loadingIndicatorRadius;
 
-  const Pressable({Key? key, required this.child, required this.onTap})
+  const Pressable(
+      {Key? key,
+      required this.child,
+      required this.onTap,
+      this.isLoading = false,
+      this.loadingIndicatorRadius = 10.0})
       : super(key: key);
 
   @override
@@ -43,9 +50,24 @@ class _PressableState extends State<Pressable>
       onTapCancel: () {
         controller.forward(from: 0.8);
       },
-      child: Transform.scale(
-        scale: controller.value,
-        child: widget.child,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Opacity(
+            opacity: widget.isLoading ? 0 : 1,
+            child: Transform.scale(
+              scale: controller.value,
+              child: widget.child,
+            ),
+          ),
+          Opacity(
+            opacity: widget.isLoading ? 1 : 0,
+            child: CupertinoActivityIndicator(
+              animating: widget.isLoading,
+              radius: widget.loadingIndicatorRadius,
+            ),
+          ),
+        ],
       ),
     );
   }
