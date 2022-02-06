@@ -31,45 +31,47 @@ class _PostCardState extends State<PostCard> {
       child: Hero(
         tag: widget.post.id,
         child: Container(
-          margin: const EdgeInsets.only(bottom: 25.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(kBORDER_RADIUS),
-            color: kSECONDARY_COLOR,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(kBORDER_RADIUS),
-                  topRight: Radius.circular(kBORDER_RADIUS),
-                ),
-                child: Image.network(widget.post.image,
-                    height: 300, fit: BoxFit.cover),
-              ),
-              Container(
-                margin: const EdgeInsets.symmetric(
-                    vertical: 10.0, horizontal: 20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.post.category,
-                      style: const TextStyle(
-                          color: kACCENT_COLOR, fontWeight: FontWeight.w600),
+            margin: const EdgeInsets.only(bottom: 25.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(kBORDER_RADIUS),
+              color: kSECONDARY_COLOR,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(kBORDER_RADIUS),
+                      topRight: Radius.circular(kBORDER_RADIUS),
                     ),
-                    const SizedBox(height: 7.0),
-                    Text(
-                      widget.post.title,
-                      maxLines: 2,
-                      style: const TextStyle(fontWeight: FontWeight.w600),
-                    )
-                  ],
-                ),
+                    child: Image.network(widget.post.image,
+                        height: 300, fit: BoxFit.cover),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 10.0, horizontal: 20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.post.category,
+                          style: const TextStyle(
+                              color: kACCENT_COLOR,
+                              fontWeight: FontWeight.w600),
+                        ),
+                        const SizedBox(height: 7.0),
+                        Text(
+                          widget.post.title,
+                          maxLines: 2,
+                          style: const TextStyle(fontWeight: FontWeight.w600),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            )),
         flightShuttleBuilder:
             (flightContext, animation, direction, fromcontext, toContext) {
           final Hero toHero = toContext.widget as Hero;
