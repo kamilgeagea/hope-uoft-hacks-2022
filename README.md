@@ -33,4 +33,8 @@ Like and Reply to comments
 - node.js
 - rapidapi
 
+#Links
+- Devpost: https://devpost.com/software/hopeful-7eorhk?ref_content=user-portfolio&ref_feature=in_progress
+- Youtube: https://www.youtube.com/watch?v=gy3FKz7g7iA
+
 # Try it out
