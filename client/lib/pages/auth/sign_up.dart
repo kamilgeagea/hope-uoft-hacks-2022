@@ -1,4 +1,9 @@
+import 'package:client/constants.dart';
+import 'package:client/pages/auth/sign_in.dart';
+import 'package:client/widgets/pressable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -16,124 +21,129 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return CupertinoScaffold(
       body: SingleChildScrollView(
-        child: Container(
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(50, 100, 50, 50),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Sign up",
-                      style: TextStyle(
-                        fontSize: 45,
-                        fontWeight: FontWeight.w600,
-                      ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(15, 100, 15, 50),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Sign up",
+                    style: TextStyle(
+                      fontSize: 35,
+                      fontWeight: FontWeight.w600,
                     ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: () async {
-                          if (_formkey.currentState?.validate() ?? false) {
-                            //_authService.signIn(email, password);
-                          }
-                        },
-                        child: Text("Done",
-                            style: TextStyle(color: Colors.pink, fontSize: 18)),
-                      ),
-                    )
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Pressable(
+                      onTap: () async {
+                        if (_formkey.currentState?.validate() ?? false) {
+                          FocusManager.instance.primaryFocus?.unfocus();
+                          //_authService.signIn(email, password);
+                        }
+                      },
+                      child: const Text("Submit",
+                          style: TextStyle(
+                              color: kACCENT_COLOR,
+                              fontSize: kLARGE_FONT,
+                              fontWeight: FontWeight.w600)),
+                    ),
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 50,
+              ),
+              Form(
+                key: _formkey,
+                child: Column(
+                  children: [
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text("Email"),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    CupertinoTextField(
+                      padding: EdgeInsets.zero,
+                      placeholder: "Enter email",
+                      decoration:
+                          const BoxDecoration(color: Colors.transparent),
+                      onChanged: (val) => setState(() {
+                        email = val;
+                      }),
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text("Password"),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    CupertinoTextField(
+                      padding: EdgeInsets.zero,
+                      placeholder: "Enter password",
+                      decoration:
+                          const BoxDecoration(color: Colors.transparent),
+                      obscureText: true,
+                      maxLength: 20,
+                      onChanged: (val) => setState(() {
+                        password = val;
+                      }),
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text("Confirm Password"),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    CupertinoTextField(
+                      padding: EdgeInsets.zero,
+                      placeholder: "Enter password confirmation",
+                      decoration:
+                          const BoxDecoration(color: Colors.transparent),
+                      obscureText: true,
+                      maxLength: 20,
+                      onChanged: (val) => setState(() {
+                        passwordTwo = val;
+                      }),
+                    ),
+                    const SizedBox(
+                      height: 30.0,
+                    ),
+                    Pressable(
+                        child: const Text(
+                          "Sign in instead",
+                          style: TextStyle(
+                            color: kACCENT_COLOR,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.pushReplacement(
+                              context,
+                              PageRouteBuilder(
+                                  pageBuilder: (context, _, __) =>
+                                      const SignIn(),
+                                  transitionDuration: Duration.zero));
+                        })
                   ],
                 ),
-                SizedBox(
-                  height: 50,
-                ),
-                Form(
-                  key: _formkey,
-                  child: Column(
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text("Username"),
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(hintText: "Enter username"),
-                        validator: (value) => ((value?.isEmpty ?? true)
-                            ? 'Please enter your username'
-                            : null),
-                        onChanged: (val) => setState(() {
-                          username = val;
-                        }),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text("Email"),
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(hintText: "Enter email"),
-                        validator: (value) => ((value?.isEmpty ?? true) ||
-                                !(value ?? '').contains(new RegExp(r'[@]'))
-                            ? 'Please enter a valid email address'
-                            : null),
-                        onChanged: (val) => setState(() {
-                          email = val;
-                        }),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text("Password"),
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(hintText: "Enter password"),
-                        validator: (value) => ((value?.isEmpty ?? true) ||
-                                (value?.length ?? 1) < 7 ||
-                                !(value ?? '').contains(new RegExp(r'[0-9]')))
-                            ? (value?.length ?? 1) < 7
-                                ? 'Ensure your password is at least 7 characters.'
-                                : 'Please ensure your password contains a numeric digit.'
-                            : ((value?.length ?? 1) > 20)
-                                ? 'Your password cannot be longer than 20 characters'
-                                : null,
-                        obscureText: true,
-                        maxLength: 20,
-                        onChanged: (val) => setState(() {
-                          password = val;
-                        }),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text("Confirm Password"),
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                            hintText: "Enter password confirmation"),
-                        validator: (value) => ((value?.isEmpty ?? true) ||
-                                ((value ?? "0") != password))
-                            ? 'Please ensure your two passwords match.'
-                            : null,
-                        obscureText: true,
-                        maxLength: 20,
-                        onChanged: (val) => setState(() {
-                          passwordTwo = val;
-                        }),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
