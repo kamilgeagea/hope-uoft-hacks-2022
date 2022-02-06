@@ -140,7 +140,7 @@ class _PostState extends State<Post> with TickerProviderStateMixin {
                             showCupertinoModalBottomSheet(
                                 context: context,
                                 isDismissible: true,
-                                builder: (context) => const Panel());
+                                builder: (context) => Panel(post: widget.post));
                           })
                     ]),
                   )

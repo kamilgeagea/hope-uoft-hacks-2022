@@ -1,91 +1,27 @@
 import 'package:client/constants.dart';
+import 'package:client/widgets/comment.dart';
 import 'package:client/widgets/pressable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class Panel extends StatelessWidget {
-  const Panel({Key? key}) : super(key: key);
+class Panel extends StatefulWidget {
+  final PostItem post;
 
-  static final List<CommentItem> comments = [
-    CommentItem(
-        id: '1',
-        userId: 'user1',
-        postId: '1',
-        date: '5 minutes ago',
-        text: 'awesome article, thanks for posting'),
-    CommentItem(
-        id: '2',
-        userId: 'user1',
-        postId: '1',
-        date: '5 minutes ago',
-        text: 'awesome article, thanks for posting'),
-    CommentItem(
-        id: '3',
-        userId: 'user1',
-        postId: '1',
-        date: '5 minutes ago',
-        text: 'awesome article, thanks for posting'),
-    CommentItem(
-        id: '4',
-        userId: 'user1',
-        postId: '1',
-        date: '5 minutes ago',
-        text: 'awesome article, thanks for posting'),
-    CommentItem(
-        id: '5',
-        userId: 'user1',
-        postId: '1',
-        date: '5 minutes ago',
-        text: 'awesome article, thanks for posting'),
-    CommentItem(
-        id: '6',
-        userId: 'user1',
-        postId: '1',
-        date: '5 minutes ago',
-        text: 'awesome article, thanks for posting'),
-    CommentItem(
-        id: '7',
-        userId: 'user1',
-        postId: '1',
-        date: '5 minutes ago',
-        text: 'awesome article, thanks for posting'),
-    CommentItem(
-        id: '8',
-        userId: 'user1',
-        postId: '1',
-        date: '5 minutes ago',
-        text: 'awesome article, thanks for posting'),
-    CommentItem(
-        id: '9',
-        userId: 'user1',
-        postId: '1',
-        date: '5 minutes ago',
-        text: 'awesome article, thanks for posting'),
-    CommentItem(
-        id: '10',
-        userId: 'user1',
-        postId: '1',
-        date: '5 minutes ago',
-        text: 'awesome article, thanks for posting'),
-    CommentItem(
-        id: '11',
-        userId: 'user1',
-        postId: '1',
-        date: '5 minutes ago',
-        text: 'awesome article, thanks for posting'),
-    CommentItem(
-        id: '12',
-        userId: 'user1',
-        postId: '1',
-        date: '5 minutes ago',
-        text: 'awesome article, thanks for posting'),
-    CommentItem(
-        id: '13',
-        userId: 'user1',
-        postId: '1',
-        date: '5 minutes ago',
-        text: 'awesome article, thanks for posting'),
-  ];
+  const Panel({Key? key, required this.post}) : super(key: key);
+
+  @override
+  _PanelState createState() => _PanelState();
+}
+
+class _PanelState extends State<Panel> {
+  final _firestore = FirebaseFirestore.instance;
+  final _auth = FirebaseAuth.instance;
+  final TextEditingController _textController = TextEditingController();
+
+  String _text = "";
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -106,43 +42,45 @@ class Panel extends StatelessWidget {
             height: 30.0,
           ),
           Expanded(
-            child: ListView.builder(
-              padding:
-                  const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 5.0),
-              itemCount: comments.length,
-              itemBuilder: (context, index) {
-                return Container(
-                  padding: const EdgeInsets.only(bottom: 25.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Text(
-                            comments[index].userId,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: kACCENT_COLOR),
-                          ),
-                          const SizedBox(width: 10.0),
-                          Text(
-                            comments[index].date,
-                            style:
-                                const TextStyle(color: kSECONDARY_TEXT_COLOR),
-                          )
-                        ],
+            child: StreamBuilder<QuerySnapshot>(
+              stream: _firestore
+                  .collection("comments")
+                  .where('postId', isEqualTo: widget.post.id)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final documents = snapshot.data!.docs;
+                  documents.sort((a, b) =>
+                      b['date'].toString().compareTo(a['date'].toString()));
+                  List<Comment> comments = [];
+                  for (var document in documents) {
+                    comments.add(Comment(
+                      author: document['author'],
+                      text: document['text'],
+                      date: document['date'],
+                    ));
+                  }
+
+                  if (comments.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        "There are no comments",
+                        style: TextStyle(color: kSECONDARY_TEXT_COLOR),
                       ),
-                      const SizedBox(
-                        height: 5.0,
-                      ),
-                      Text(
-                        comments[index].text,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                );
+                    );
+                  }
+
+                  return ListView(
+                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                      children: comments);
+                } else {
+                  return const Center(
+                    child: CupertinoActivityIndicator(
+                      animating: true,
+                      radius: 20,
+                    ),
+                  );
+                }
               },
             ),
           ),
@@ -156,17 +94,54 @@ class Panel extends StatelessWidget {
             child: SafeArea(
               child: Row(
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: CupertinoTextField(
-                      decoration: BoxDecoration(
+                      controller: _textController,
+                      onChanged: (value) {
+                        setState(() {
+                          _text = value;
+                        });
+                      },
+                      decoration: const BoxDecoration(
                         color: Colors.transparent,
                       ),
                       placeholder: "Enter comment",
                     ),
                   ),
                   Pressable(
-                    onTap: () {
+                    isLoading: _isLoading,
+                    onTap: () async {
                       FocusManager.instance.primaryFocus?.unfocus();
+
+                      try {
+                        final user = _auth.currentUser;
+
+                        if (user == null || _text.isEmpty) {
+                          throw Error();
+                        }
+
+                        setState(() {
+                          _isLoading = true;
+                        });
+
+                        await _firestore.collection("comments").add({
+                          "text": _text,
+                          "author": user.email,
+                          "date": DateTime.now(),
+                          "postId": widget.post.id
+                        });
+
+                        setState(() {
+                          _isLoading = false;
+                          _textController.text = "";
+                        });
+                      } catch (e) {
+                        setState(() {
+                          _isLoading = false;
+                          _textController.text = "";
+                        });
+                        print(e);
+                      }
                     },
                     child: const Text(
                       "Post",
