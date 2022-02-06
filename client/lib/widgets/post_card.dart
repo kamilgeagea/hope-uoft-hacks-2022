@@ -21,7 +21,7 @@ class _PostCardState extends State<PostCard> {
       onTap: () {
         Navigator.of(context).push(PageRouteBuilder(
             opaque: false,
-            transitionDuration: const Duration(milliseconds: 300),
+            transitionDuration: const Duration(milliseconds: 700),
             fullscreenDialog: true,
             pageBuilder: (context, _, __) => Post(
                   post: widget.post,
@@ -73,16 +73,25 @@ class _PostCardState extends State<PostCard> {
         flightShuttleBuilder:
             (flightContext, animation, direction, fromcontext, toContext) {
           final Hero toHero = toContext.widget as Hero;
+          // Change push and pop animation.
           return direction == HeroFlightDirection.push
               ? ScaleTransition(
-                  scale: animation.drive(Tween<double>(
-                    begin: 0.75,
-                    end: 1.02,
-                  ).chain(CurveTween(
-                      curve:
-                          const Interval(0.4, 1.0, curve: Curves.easeInOut)))),
+                  scale: animation.drive(
+                    Tween<double>(
+                      begin: 0.75,
+                      end: 1.02,
+                    ).chain(
+                      CurveTween(
+                          curve: const Interval(0.4, 1.0,
+                              curve: Curves.easeInOut)),
+                    ),
+                  ),
+                  child: toHero.child,
                 )
-              : SizeTransition(sizeFactor: animation, child: toHero.child);
+              : SizeTransition(
+                  sizeFactor: animation,
+                  child: toHero.child,
+                );
         },
       ),
     );

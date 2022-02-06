@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'package:client/widgets/floating_button.dart';
+import 'package:client/widgets/panel.dart';
 import 'package:flutter/cupertino.dart';
-
 import 'package:client/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class Post extends StatefulWidget {
   final PostItem post;
@@ -27,6 +29,8 @@ class _PostState extends State<Post> with TickerProviderStateMixin {
   late bool _needPop;
   late bool _isTop;
   late bool _opacity;
+
+  bool _showContent = true;
 
   @override
   void initState() {
@@ -66,7 +70,88 @@ class _PostState extends State<Post> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final Widget _content = CustomScrollView(
+      slivers: <Widget>[
+        SliverAppBar(
+          backgroundColor: Colors.transparent,
+          expandedHeight: 400,
+          leading: Container(),
+          flexibleSpace: FlexibleSpaceBar(
+            background: Hero(
+              tag: widget.post.id,
+              child: ClipRRect(
+                borderRadius: BorderRadius.only(
+                    topLeft: const Radius.circular(20.0),
+                    topRight: const Radius.circular(20.0),
+                    bottomLeft: _showContent
+                        ? Radius.zero
+                        : const Radius.circular(20.0),
+                    bottomRight: _showContent
+                        ? Radius.zero
+                        : const Radius.circular(20.0)),
+                child: Image.network(widget.post.image, fit: BoxFit.cover),
+              ),
+            ),
+          ),
+        ),
+        SliverList(
+          delegate: SliverChildListDelegate([
+            _showContent
+                ? Container(
+                    padding: const EdgeInsets.all(15.0),
+                    width: double.infinity,
+                    child: Stack(children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          const SizedBox(
+                            height: 5.0,
+                          ),
+                          Text(
+                            widget.post.category,
+                            style: const TextStyle(
+                                color: kACCENT_COLOR,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          const SizedBox(
+                            height: 15.0,
+                          ),
+                          Text(
+                            widget.post.title,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: kLARGE_FONT),
+                          ),
+                          const SizedBox(
+                            height: 15.0,
+                          ),
+                          Text(widget.post.description),
+                          const SizedBox(
+                            height: 50.0,
+                          ),
+                        ],
+                      ),
+                      FloatingButton(
+                          icon: const Icon(
+                            Icons.chat_bubble,
+                            color: Colors.white,
+                          ),
+                          onTap: () {
+                            showCupertinoModalBottomSheet(
+                                context: context,
+                                isDismissible: true,
+                                builder: (context) => const Panel());
+                          })
+                    ]),
+                  )
+                : Container(),
+          ]),
+        ),
+      ],
+    );
+
     return CupertinoPageScaffold(
+      resizeToAvoidBottomInset: true,
       child: AnimatedBuilder(
         animation: _closeAnimation,
         builder: (context, _child) {
@@ -88,6 +173,9 @@ class _PostState extends State<Post> with TickerProviderStateMixin {
                   _initPoint = opm.position.dy;
                 },
                 onPointerUp: (opm) {
+                  setState(() {
+                    _showContent = true;
+                  });
                   if (_needPop) {
                     _closeController.reverse();
                   }
@@ -95,6 +183,9 @@ class _PostState extends State<Post> with TickerProviderStateMixin {
                 onPointerMove: (opm) {
                   _verticalDistance = -_initPoint + opm.position.dy;
                   if (_verticalDistance >= 0) {
+                    setState(() {
+                      _showContent = false;
+                    });
                     // Scroll up
                     if (_isTop &&
                         _verticalDistance < SCALE_ANIMATION_STANDARD) {
@@ -120,80 +211,26 @@ class _PostState extends State<Post> with TickerProviderStateMixin {
                       }
                     }
                   } else {
+                    setState(() {
+                      _showContent = true;
+                    });
                     _isTop = false;
                   }
                 },
                 child: NotificationListener<ScrollNotification>(
-                  onNotification: (scrollNotification) {
-                    if (scrollNotification is ScrollUpdateNotification) {
-                      double scrollDistance = scrollNotification.metrics.pixels;
-                      if (scrollDistance <= 3) {
-                        _isTop = true;
-                      }
-                    }
+                    onNotification: (scrollNotification) {
+                      if (scrollNotification is ScrollUpdateNotification) {
+                        double scrollDistance =
+                            scrollNotification.metrics.pixels;
 
-                    return true;
-                  },
-                  child: CustomScrollView(
-                    slivers: <Widget>[
-                      SliverAppBar(
-                        backgroundColor: Colors.transparent,
-                        expandedHeight: 400,
-                        leading: Container(),
-                        flexibleSpace: FlexibleSpaceBar(
-                          background: Hero(
-                            tag: widget.post.id,
-                            child: ClipRRect(
-                              borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(20.0),
-                                  topRight: Radius.circular(20.0)),
-                              child: Image.network(widget.post.image,
-                                  fit: BoxFit.cover, height: 400),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SliverList(
-                        delegate: SliverChildListDelegate([
-                          Container(
-                            padding: const EdgeInsets.all(15.0),
-                            width: double.infinity,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                const SizedBox(
-                                  height: 5.0,
-                                ),
-                                Text(
-                                  widget.post.category,
-                                  style: const TextStyle(
-                                      color: kACCENT_COLOR,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                const SizedBox(
-                                  height: 15.0,
-                                ),
-                                Text(
-                                  widget.post.title,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 20),
-                                ),
-                                const SizedBox(
-                                  height: 15.0,
-                                ),
-                                Text(widget.post.description),
-                                const SizedBox(
-                                  height: 150.0,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ]),
-                      ),
-                    ],
-                  ),
-                ),
+                        if (scrollDistance <= 3) {
+                          _isTop = true;
+                        }
+                      }
+
+                      return true;
+                    },
+                    child: _content),
               ),
             ),
           ),
