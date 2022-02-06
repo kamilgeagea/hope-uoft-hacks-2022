@@ -3,10 +3,52 @@ var User = require('./../models/user')
 var Comment = require('./../models/article')
 var jwt = require('jwt-simple')
 var config = require('./database/dbConfig')
+var request = require('request');
+const axios = require('axios').default;
+const NewsAPI = require('newsapi');
+const newsapi = new NewsAPI('e7a837f92cf24c1f85b35a28b7eb263b');
 
 const functions = {
     scrapper: function (req, res) {
-        return res.send({hello: "world"});
+        try{
+            let output = []
+            newsapi.v2.sources({
+                category: 'technology',
+                language: 'en',
+                country: 'us'
+            }).then(response => {
+                output.push(response.sources)
+                newsapi.v2.sources({
+                    category: 'science',
+                    language: 'en',
+                    country: 'us'
+                }).then(response1 => {
+                    output.push(response1.sources)
+                    newsapi.v2.sources({
+                        category: 'sports',
+                        language: 'en',
+                        country: 'us'
+                    }).then(response2 => {
+                        output.push(response2.sources)
+                        newsapi.v2.sources({
+                            category: 'entertainment',
+                            language: 'en',
+                            country: 'us'
+                        }).then(response3 => {
+                            output.push(response3.sources)
+                            res.send(output)
+                        });
+                    });
+                });
+            });
+            
+        }
+        catch(error){
+            res.send({
+                success: false,
+                msg: 'Unable to fetch information this time! Try again'
+            })
+        }
     },
     addNew: function(req,res){
         if(!req.body.username || !req.body.password || !req.body.email){
