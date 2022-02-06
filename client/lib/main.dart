@@ -1,3 +1,4 @@
+import 'package:client/pages/posts/posts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'constants.dart';
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const CupertinoApp(
-      home: Launch(),
+      home: Posts(),
       debugShowCheckedModeBanner: false,
       title: 'Launch',
       theme: CupertinoThemeData(
