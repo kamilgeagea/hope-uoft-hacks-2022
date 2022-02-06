@@ -11,32 +11,28 @@ const newsapi = new NewsAPI('e7a837f92cf24c1f85b35a28b7eb263b');
 const functions = {
     scrapper: function (req, res) {
         try{
-            let output = []
-            newsapi.v2.sources({
-                category: 'technology',
+            let output = ''
+            newsapi.v2.topHeadlines({
+                category: 'business',
                 language: 'en',
-                country: 'us'
             }).then(response => {
-                output.push(response.sources)
-                newsapi.v2.sources({
+                output+=JSON.stringify(response)
+                newsapi.v2.topHeadlines({
                     category: 'science',
                     language: 'en',
-                    country: 'us'
                 }).then(response1 => {
-                    output.push(response1.sources)
-                    newsapi.v2.sources({
+                    output+=JSON.stringify(response1)
+                    newsapi.v2.topHeadlines({
                         category: 'sports',
                         language: 'en',
-                        country: 'us'
                     }).then(response2 => {
-                        output.push(response2.sources)
-                        newsapi.v2.sources({
+                        output+=JSON.stringify(response2)
+                        newsapi.v2.topHeadlines({
                             category: 'entertainment',
                             language: 'en',
-                            country: 'us'
                         }).then(response3 => {
-                            output.push(response3.sources)
-                            res.send(output)
+                            output+=JSON.stringify(response3)
+                            res.json(output)
                         });
                     });
                 });
