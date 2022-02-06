@@ -3,41 +3,96 @@ var User = require('./../models/user')
 var Comment = require('./../models/article')
 var jwt = require('jwt-simple')
 var config = require('./database/dbConfig')
-var request = require('request');
-const axios = require('axios').default;
+var axios = require("axios").default;
 const NewsAPI = require('newsapi');
 const newsapi = new NewsAPI('e7a837f92cf24c1f85b35a28b7eb263b');
+// Imports the Google Cloud client library
+const language = require('@google-cloud/language');
+// Instantiates a client
+const client = new language.LanguageServiceClient();
+
+var business = {
+    method: 'GET',
+    url: 'https://free-news.p.rapidapi.com/v1/search',
+    params: {q: 'Business', lang: 'en'},
+    headers: {
+      'x-rapidapi-host': 'free-news.p.rapidapi.com',
+      'x-rapidapi-key': '1640038d7fmsh5f114f1c5800f0bp1bba08jsn3113166daa6a'
+    }
+};
+
+var science = {
+    method: 'GET',
+    url: 'https://free-news.p.rapidapi.com/v1/search',
+    params: {q: 'Science', lang: 'en'},
+    headers: {
+      'x-rapidapi-host': 'free-news.p.rapidapi.com',
+      'x-rapidapi-key': '1640038d7fmsh5f114f1c5800f0bp1bba08jsn3113166daa6a'
+    }
+};
+
+var sports = {
+    method: 'GET',
+    url: 'https://free-news.p.rapidapi.com/v1/search',
+    params: {q: 'Sports', lang: 'en'},
+    headers: {
+      'x-rapidapi-host': 'free-news.p.rapidapi.com',
+      'x-rapidapi-key': '1640038d7fmsh5f114f1c5800f0bp1bba08jsn3113166daa6a'
+    }
+};
+
+var entertainment = {
+    method: 'GET',
+    url: 'https://free-news.p.rapidapi.com/v1/search',
+    params: {q: 'Entertainment', lang: 'en'},
+    headers: {
+      'x-rapidapi-host': 'free-news.p.rapidapi.com',
+      'x-rapidapi-key': '1640038d7fmsh5f114f1c5800f0bp1bba08jsn3113166daa6a'
+    }
+};
 
 const functions = {
     scrapper: function (req, res) {
         try{
             let output = ''
-            newsapi.v2.topHeadlines({
-                category: 'business',
-                language: 'en',
-            }).then(response => {
-                output+=JSON.stringify(response)
-                newsapi.v2.topHeadlines({
-                    category: 'science',
-                    language: 'en',
-                }).then(response1 => {
-                    output+=JSON.stringify(response1)
-                    newsapi.v2.topHeadlines({
-                        category: 'sports',
-                        language: 'en',
-                    }).then(response2 => {
-                        output+=JSON.stringify(response2)
-                        newsapi.v2.topHeadlines({
-                            category: 'entertainment',
-                            language: 'en',
-                        }).then(response3 => {
-                            output+=JSON.stringify(response3)
-                            res.json(output)
+            axios.request(business).then(function (response) {
+                output+=response
+                axios.request(science).then(function (response1) {
+                    output+=response1
+                    axios.request(sports).then(function (response2) {
+                        output+=response2
+                        axios.request(entertainment).then(function (response3) {
+                            output+=response3;
+                            res.send(output)
+                        }).catch(function (error) {
+                            console.error(error);
                         });
+                    }).catch(function (error) {
+                        console.error(error);
                     });
+                }).catch(function (error) {
+                    console.error(error);
                 });
+            }).catch(function (error) {
+                console.error(error);
             });
-            
+            /*const func = async function quickstart(req) {
+                // The text to analyze
+                const text = req;
+                
+                const document = {
+                    content: text,
+                    type: 'PLAIN_TEXT',
+                };
+                
+                // Detects the sentiment of the text
+                const [result] = await client.analyzeSentiment({document: document});
+                const sentiment = result.documentSentiment;
+                
+                console.log(`Text: ${text}`);
+                console.log(`Sentiment score: ${sentiment.score}`);
+                console.log(`Sentiment magnitude: ${sentiment.magnitude}`);
+            }*/
         }
         catch(error){
             res.send({
