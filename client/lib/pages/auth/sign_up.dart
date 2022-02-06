@@ -40,7 +40,7 @@ class _SignUpState extends State<SignUp> {
                       child: TextButton(
                         onPressed: () async {
                           if (_formkey.currentState?.validate() ?? false) {
-                            //_authService.signIn(email, password);
+                            //_authService.signUp(username, email, password);
                           }
                         },
                         child: TextButton(

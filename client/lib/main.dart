@@ -1,26 +1,44 @@
+import 'package:client/services/auth_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 
 //import 'pages/launch.dart';
+import 'models/user_model.dart';
 import 'pages/wrapper.dart';
+
+final StreamProvider<UserModel?> userAuthProvider =
+    StreamProvider((_) => AuthService().user);
+
+// final StreamProvider<UserModel?> userInfoProvider = StreamProvider((_) =>
+//     UserService().getUserInfo(FirebaseAuth.instance.currentUser?.uid ?? ''));
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   Firebase.initializeApp();
-  runApp(const MyApp());
+  SystemChrome.setEnabledSystemUIMode(
+    SystemUiMode.immersiveSticky,
+  );
+  runApp(
+    ProviderScope(
+      child: const MyApp(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       home: Wrapper(),
       debugShowCheckedModeBanner: false,
       title: 'Wrapper',
-      theme: ThemeData.dark(),
+      //theme: ThemeData.dark(),
     );
   }
 }

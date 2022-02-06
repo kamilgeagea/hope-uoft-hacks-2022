@@ -37,11 +37,17 @@ class _SignInState extends State<SignIn> {
                       child: TextButton(
                         onPressed: () async {
                           if (_formkey.currentState?.validate() ?? false) {
-                            //_authService.signIn(email, password);
+                            //_authService.signIn(username, email, password);
                           }
                         },
-                        child: Text("Done",
-                            style: TextStyle(color: Colors.pink, fontSize: 18)),
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.pushReplacementNamed(context, '/profile');
+                          },
+                          child: Text("Done",
+                              style:
+                                  TextStyle(color: Colors.pink, fontSize: 18)),
+                        ),
                       ),
                     )
                   ],

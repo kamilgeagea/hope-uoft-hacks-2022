@@ -45,8 +45,7 @@ class _LaunchState extends State<Launch> {
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => SignIn()));
+                        Navigator.pushReplacementNamed(context, '/sign_in');
                       },
                       child: Text(
                         "Sign In",
@@ -57,7 +56,7 @@ class _LaunchState extends State<Launch> {
                               Colors.grey[800]),
                           padding:
                               MaterialStateProperty.all<EdgeInsetsGeometry>(
-                            EdgeInsets.symmetric(vertical: 15, horizontal: 60),
+                            EdgeInsets.symmetric(vertical: 15, horizontal: 65),
                           ),
                           shape: MaterialStateProperty.all<OutlinedBorder>(
                               RoundedRectangleBorder(
@@ -68,8 +67,7 @@ class _LaunchState extends State<Launch> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => SignUp()));
+                        Navigator.pushReplacementNamed(context, '/sign_up');
                       },
                       child: Text(
                         "Sign Up",
