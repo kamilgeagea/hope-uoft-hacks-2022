@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
-
 import 'package:client/constants.dart';
-
 import '../../widgets/pill.dart';
 import '../../widgets/post_card.dart';
 

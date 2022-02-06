@@ -1,9 +1,11 @@
 import 'package:client/constants.dart';
 import 'package:client/pages/auth/sign_in.dart';
+import 'package:client/pages/posts/posts.dart';
 import 'package:client/widgets/pressable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -14,7 +16,10 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   final _formkey = GlobalKey<FormState>();
-  String username = "";
+  final _auth = FirebaseAuth.instance;
+
+  bool isLoading = false;
+
   String password = "";
   String email = "";
   String passwordTwo = "";
@@ -41,10 +46,41 @@ class _SignUpState extends State<SignUp> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: Pressable(
+                      isLoading: isLoading,
                       onTap: () async {
                         if (_formkey.currentState?.validate() ?? false) {
                           FocusManager.instance.primaryFocus?.unfocus();
-                          //_authService.signIn(email, password);
+
+                          try {
+                            if (password != passwordTwo) {
+                              throw Error();
+                            }
+
+                            setState(() {
+                              isLoading = true;
+                            });
+
+                            final newUser =
+                                await _auth.createUserWithEmailAndPassword(
+                                    email: email, password: password);
+
+                            setState(() {
+                              isLoading = false;
+                            });
+                            if (newUser != null) {
+                              Navigator.pushReplacement(
+                                  context,
+                                  PageRouteBuilder(
+                                      pageBuilder: (context, _, __) =>
+                                          const Posts(),
+                                      transitionDuration: Duration.zero));
+                            }
+                          } catch (e) {
+                            setState(() {
+                              isLoading = false;
+                            });
+                            print(e);
+                          }
                         }
                       },
                       child: const Text("Submit",
@@ -71,6 +107,7 @@ class _SignUpState extends State<SignUp> {
                       height: 10,
                     ),
                     CupertinoTextField(
+                      style: const TextStyle(color: kSECONDARY_TEXT_COLOR),
                       padding: EdgeInsets.zero,
                       placeholder: "Enter email",
                       decoration:
@@ -90,6 +127,7 @@ class _SignUpState extends State<SignUp> {
                       height: 10,
                     ),
                     CupertinoTextField(
+                      style: const TextStyle(color: kSECONDARY_TEXT_COLOR),
                       padding: EdgeInsets.zero,
                       placeholder: "Enter password",
                       decoration:
@@ -111,6 +149,7 @@ class _SignUpState extends State<SignUp> {
                       height: 10,
                     ),
                     CupertinoTextField(
+                      style: const TextStyle(color: kSECONDARY_TEXT_COLOR),
                       padding: EdgeInsets.zero,
                       placeholder: "Enter password confirmation",
                       decoration:
