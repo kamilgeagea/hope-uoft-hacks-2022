@@ -1,10 +1,19 @@
+import 'package:client/widgets/pressable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:client/constants.dart';
 import '../../widgets/pill.dart';
 import '../../widgets/post_card.dart';
 
-class Posts extends StatelessWidget {
+class Posts extends StatefulWidget {
   const Posts({Key? key}) : super(key: key);
+
+  @override
+  _PostsState createState() => _PostsState();
+}
+
+class _PostsState extends State<Posts> {
+  String category = "";
 
   // Import categories once backend implemented
   static final List<String> categories = [
@@ -62,16 +71,65 @@ class Posts extends StatelessWidget {
               return <Widget>[
                 const CupertinoSliverNavigationBar(
                   largeTitle: Text(
-                    "Stories",
+                    "News",
                   ),
                 )
               ];
             },
-            body: SingleChildScrollView(
-              physics: const ScrollPhysics(),
-              child: Column(
-                children: <Widget>[
-                  ListView.builder(
+            body: Column(
+              children: <Widget>[
+                const SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                    height: 40,
+                    child: category.length == 0
+                        ? ListView.builder(
+                            shrinkWrap: true,
+                            padding: const EdgeInsets.only(left: 15.0),
+                            scrollDirection: Axis.horizontal,
+                            itemCount: categories.length,
+                            itemBuilder: (context, index) {
+                              return Pressable(
+                                  onTap: () {
+                                    setState(() {
+                                      category = categories[index];
+                                    });
+                                  },
+                                  child: Pill(text: categories[index]));
+                            })
+                        : Container(
+                            padding: const EdgeInsets.only(left: 15.0),
+                            child: Row(
+                              children: [
+                                Pill(
+                                  text: category,
+                                  color: kSECONDARY_TEXT_COLOR,
+                                ),
+                                Pressable(
+                                    child: Container(
+                                      width: 40,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                          color: kSECONDARY_COLOR,
+                                          borderRadius:
+                                              BorderRadius.circular(50)),
+                                      child: const Center(
+                                          child: Icon(
+                                        Icons.close,
+                                        color: Colors.white,
+                                      )),
+                                    ),
+                                    onTap: () {
+                                      setState(() {
+                                        category = "";
+                                      });
+                                    })
+                              ],
+                            ),
+                          )),
+                Expanded(
+                  child: ListView.builder(
                     padding: const EdgeInsets.all(15.0),
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
@@ -80,8 +138,8 @@ class Posts extends StatelessWidget {
                       return PostCard(post: posts[index]);
                     },
                   ),
-                ],
-              ),
+                )
+              ],
             )));
   }
 }
